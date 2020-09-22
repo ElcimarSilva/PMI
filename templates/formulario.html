@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% from "macro.html" import render_field %}
+<div class="container">
+    <form method='POST' class="text-center">
+        <input type="hidden" name='csrf_token' value='{{csrf_token()}}'>
+
+        <div>{{ render_field(field.nome, class="form-control")}}</div>
+        <div>{{ render_field(field.email, class="form-control")}}</div>
+
+        <select name="sexo" id="sexo">
+            <option>
+                Masculino
+            </option>
+            <option>
+                Feminino
+            </option>
+        </select>
+
+        <button type='submit' class="btn btn-primary">
+            Enviar
+        </button>
+    </form>
+</div>
+{% endblock %}

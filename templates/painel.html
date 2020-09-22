@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+<div class="container">
+    {% block content %}
+    <div class="text-center">
+
+        <h1>Texto da pagina painel.html {{painel}}</h1>
+
+    </div>
+    <div class="text-center">
+        <a class="btn btn-primary" href="formulario" role="button">Cadastrar User Teste</a>
+        <a class="btn btn-primary" href="cadAtividade" role="button">Cadastrar Atividade</a>
+        <a class="btn btn-primary" href="cadEmpresa" role="button">Cadastrar Empresa</a>
+        <a class="btn btn-primary" href="cadFase" role="button">Cadastrar Fase</a>
+        <a class="btn btn-primary" href="cadEixo" role="button">Cadastrar Eixo</a>
+    </div>
+
+    {% endblock %}
+</div>
