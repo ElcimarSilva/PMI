@@ -1,4 +1,5 @@
-https://www.youtube.com/watch?v=GsCCyN3fRoI
+Codigo do PMI - Analise e desenvolvimento de sistemas Cesusc
+Sistema para Maturidade de Statups
 
 pip install virtualenv
 virtualenv venv
