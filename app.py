@@ -70,7 +70,7 @@ def cadEmpresa():
 
         mongo.db.empresas.insert_one(json)
         flash('Cadastro efetuado!')
-        return redirect ('/painel')
+        return redirect ('/pagEmpresa')
     return render_template ('cadEmpresa.html', field=field)
 
 #CADASTRO DE FASES VIA FORM
