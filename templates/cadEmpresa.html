@@ -3,6 +3,7 @@
 {% block content %}
 {% from "macro.html" import render_field %}
 <div class="container">
+
     <form method='POST' class="text-center">
 
         <input type="hidden" name='csrf_token' value='{{csrf_token()}}'>

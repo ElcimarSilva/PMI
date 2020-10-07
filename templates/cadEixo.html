@@ -2,16 +2,19 @@
 
 {% block content %}
 {% from "macro.html" import render_field %}
-<form method='POST' class="text-center">
 
-    <div class="form-group">
+<div class="container">
+    <form method='POST' class="text-center">
 
-        <input type="hidden" name='csrf_token' value='{{csrf_token()}}'>
-        <div>{{ render_field(field.eixo, class="form-control")}}</div>
-        <div>{{ render_field(field.descricao, class="form-control")}}</div>
-    </div>
+        <div class="form-group">
 
-    <input class="btn btn-primary" type="submit" value="Enviar">
+            <input type="hidden" name='csrf_token' value='{{csrf_token()}}'>
+            <div>{{ render_field(field.eixo, class="form-control")}}</div>
+            <div>{{ render_field(field.descricao, class="form-control")}}</div>
+        </div>
 
-</form>
+        <input class="btn btn-primary" type="submit" value="Enviar">
+
+    </form>
+</div>
 {% endblock %}

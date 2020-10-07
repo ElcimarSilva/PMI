@@ -24,7 +24,7 @@ def painel():
     return render_template('painel.html')#, teste=teste
 
 
-#Rota formulario de teste
+#Rota formulario de teste (usuario)
 @app.route ("/formulario", methods=['GET', 'POST'])
 def formulario():
     field=form(request.form)
@@ -56,22 +56,6 @@ def cadAtividade():
         flash('Cadastro efetuado!')
         return redirect ('/painel')
     return render_template ('cadAtividade.html', field=field)
-
-#CADASTRO DE EMPRESAS VIA FORM
-@app.route ("/cadEmpresa", methods=['GET', 'POST'])
-def cadEmpresa():
-    field=startup(request.form) 
-
-    if request.method == 'POST' and field.validate():
-        empresa=request.form['empresa']
-        descricao=request.form['descricao']
-        json={'empresa':empresa, 'descricao':descricao}
-        
-
-        mongo.db.empresas.insert_one(json)
-        flash('Cadastro efetuado!')
-        return redirect ('/pagEmpresa')
-    return render_template ('cadEmpresa.html', field=field)
 
 #CADASTRO DE FASES VIA FORM
 @app.route ("/cadFase", methods=['GET', 'POST'])
@@ -105,6 +89,23 @@ def cadEixo():
         return redirect ('/painel')
     return render_template ('cadEixo.html', field=field)
 
+
+#CADASTRO DE EMPRESAS VIA FORM
+@app.route ("/cadEmpresa", methods=['GET', 'POST'])
+def cadEmpresa():
+    field=startup(request.form) 
+
+    if request.method == 'POST' and field.validate():
+        empresa=request.form['empresa']
+        descricao=request.form['descricao']
+        json={'empresa':empresa, 'descricao':descricao}
+        
+
+        mongo.db.empresas.insert_one(json)
+        flash('Cadastro efetuado!')
+        return redirect ('/pagEmpresa')
+    return render_template ('cadEmpresa.html', field=field)
+
 #LISTAR EMPRESAS VIA FORM                   
 @app.route ("/pagEmpresa", methods=['GET'])
 def pagEmpresa():
@@ -135,7 +136,6 @@ def alterar_empresa(_id):
         
         return redirect (url_for('pagEmpresa'))
     return render_template('alterarEmpresa.html', itens= aux, field=field)
-
 
 
 if __name__ == "__main__":
