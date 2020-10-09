@@ -56,7 +56,7 @@ def cadAtividade():
         flash('Cadastro efetuado!')
         return redirect ('/painel')
     return render_template ('cadAtividade.html', field=field)
-
+####################################################################################
 #CADASTRO DE FASES VIA FORM
 @app.route ("/cadFase", methods=['GET', 'POST'])
 def cadFase():
@@ -73,6 +73,38 @@ def cadFase():
         return redirect ('/painel')
     return render_template ('cadFase.html', field=field)
 
+#LISTAR FASES VIA FORM
+@app.route ("/pagFases", methods=['GET'])
+def pagFases():
+    itens = mongo.db.fases.find()
+    print (itens)
+    return render_template ('pagFases.html', itens=itens)
+
+#ROTA DELETAR DA PAGINA FASES
+@app.route('/deletar/<_id>', methods=['GET','DELETE'])
+def deleta_fase(_id):
+    mongo.db.fases.delete_one({'_id': ObjectId(_id)})
+
+    return redirect (url_for('pagFases'))
+
+#ROTA ALTERAR DA PAGINA FASES
+@app.route('/alterar/<_id>', methods=['GET', 'POST'])
+def alterar_fase(_id):
+    aux = mongo.db.fases.find_one(({'_id': ObjectId(_id)}))
+
+    field = classefase(request.form)
+    if request.method == 'POST' and field.validate():
+        fase=request.form['fase']
+        descricao=request.form['descricao']
+        json={'fase':fase, 'descricao':descricao}
+
+        mongo.db.fases.delete_one({'_id': ObjectId(_id)})
+        mongo.db.fases.insert_one(json)
+        
+        return redirect (url_for('pagFases'))
+    return render_template('alterarFase.html', itens= aux, field=field)
+
+##################################################################################
 #CADASTRO DE EIXOS VIA FORM
 @app.route ("/cadEixo", methods=['GET', 'POST'])
 def cadEixo():
@@ -89,7 +121,7 @@ def cadEixo():
         return redirect ('/painel')
     return render_template ('cadEixo.html', field=field)
 
-
+####################################################################################
 #CADASTRO DE EMPRESAS VIA FORM
 @app.route ("/cadEmpresa", methods=['GET', 'POST'])
 def cadEmpresa():
@@ -137,6 +169,7 @@ def alterar_empresa(_id):
         return redirect (url_for('pagEmpresa'))
     return render_template('alterarEmpresa.html', itens= aux, field=field)
 
+####################################################################################
 
 if __name__ == "__main__":
     app.run(debug=True)
