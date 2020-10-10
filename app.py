@@ -17,16 +17,15 @@ csrf=CSRFProtect(app) #Função do Flask para proteget Form
 def base():
     
     return render_template('base.html')
-    
+#PAINEL
 @app.route ("/painel", methods=['GET'])
 def painel():
     #teste = 'texto da variavel na rota painel do app.py'
     return render_template('painel.html')#, teste=teste
-
-
-#Rota formulario de teste (usuario)
-@app.route ("/formulario", methods=['GET', 'POST'])
-def formulario():
+##################################################################################
+#CADASTRO USUARIO
+@app.route ("/usuario", methods=['GET', 'POST'])
+def usuario():
     field=form(request.form)
 
     if request.method == 'POST' and field.validate():
@@ -39,11 +38,12 @@ def formulario():
         mongo.db.users.insert_one(json)
         flash('Cadastro efetuado!')
         return redirect ('/')
-    return render_template ('formulario.html', field=field)
+    return render_template ('usuario.html', field=field)
 
-#CADASTRO DE ATIVIDADES VIA FORM
+#CADASTRO ATIVIDADES
 @app.route ("/cadAtividade", methods=['GET', 'POST'])
 def cadAtividade():
+
     field=atvdd(request.form) 
 
     if request.method == 'POST' and field.validate():
@@ -56,8 +56,9 @@ def cadAtividade():
         flash('Cadastro efetuado!')
         return redirect ('/painel')
     return render_template ('cadAtividade.html', field=field)
+
 ####################################################################################
-#CADASTRO DE FASES VIA FORM
+#CADASTRO FASES
 @app.route ("/cadFase", methods=['GET', 'POST'])
 def cadFase():
     field=classefase(request.form) 
@@ -70,25 +71,25 @@ def cadFase():
 
         mongo.db.fases.insert_one(json)
         flash('Cadastro efetuado!')
-        return redirect ('/painel')
+        return redirect ('/pagFases')
     return render_template ('cadFase.html', field=field)
 
-#LISTAR FASES VIA FORM
+#LISTAR FASES
 @app.route ("/pagFases", methods=['GET'])
 def pagFases():
     itens = mongo.db.fases.find()
     print (itens)
     return render_template ('pagFases.html', itens=itens)
 
-#ROTA DELETAR DA PAGINA FASES
-@app.route('/deletar/<_id>', methods=['GET','DELETE'])
+#DELETAR FASES
+@app.route('/deletar_fase/<_id>', methods=['GET','DELETE'])
 def deleta_fase(_id):
     mongo.db.fases.delete_one({'_id': ObjectId(_id)})
 
     return redirect (url_for('pagFases'))
 
-#ROTA ALTERAR DA PAGINA FASES
-@app.route('/alterar/<_id>', methods=['GET', 'POST'])
+#ALTERAR FASES
+@app.route('/alterar_fase/<_id>', methods=['GET', 'POST'])
 def alterar_fase(_id):
     aux = mongo.db.fases.find_one(({'_id': ObjectId(_id)}))
 
@@ -105,7 +106,7 @@ def alterar_fase(_id):
     return render_template('alterarFase.html', itens= aux, field=field)
 
 ##################################################################################
-#CADASTRO DE EIXOS VIA FORM
+#CADASTRO EIXOS
 @app.route ("/cadEixo", methods=['GET', 'POST'])
 def cadEixo():
     field=classeeixo(request.form) 
@@ -118,11 +119,25 @@ def cadEixo():
 
         mongo.db.eixos.insert_one(json)
         flash('Cadastro efetuado!')
-        return redirect ('/painel')
+        return redirect ('/pagEixos')
     return render_template ('cadEixo.html', field=field)
 
+#LISTAR EIXOS                   
+@app.route ("/pagEixos", methods=['GET'])
+def pagEixos():
+    itens = mongo.db.eixos.find()
+    print (itens)
+    return render_template ('pagEixos.html', itens=itens)
+
+#DELETAR EIXOS
+@app.route('/deletar_eixo/<_id>', methods=['GET','DELETE'])
+def deleta_eixo(_id):
+    mongo.db.eixos.delete_one({'_id': ObjectId(_id)})
+
+    return redirect (url_for('pagEixos'))
+
 ####################################################################################
-#CADASTRO DE EMPRESAS VIA FORM
+#CADASTRO EMPRESAS
 @app.route ("/cadEmpresa", methods=['GET', 'POST'])
 def cadEmpresa():
     field=startup(request.form) 
@@ -138,22 +153,22 @@ def cadEmpresa():
         return redirect ('/pagEmpresa')
     return render_template ('cadEmpresa.html', field=field)
 
-#LISTAR EMPRESAS VIA FORM                   
+#LISTAR EMPRESAS                   
 @app.route ("/pagEmpresa", methods=['GET'])
 def pagEmpresa():
     itens = mongo.db.empresas.find()
     print (itens)
     return render_template ('pagEmpresa.html', itens=itens)
 
-#ROTA DELETAR DA PAGINA EMPRESA
-@app.route('/deletar/<_id>', methods=['GET','DELETE'])
+#DELETAR EMPRESA
+@app.route('/deletar_empresa/<_id>', methods=['GET','DELETE'])
 def deleta_empresa(_id):
     mongo.db.empresas.delete_one({'_id': ObjectId(_id)})
 
     return redirect (url_for('pagEmpresa'))
 
-#ROTA ALTERAR DA PAGINA EMPRESA
-@app.route('/alterar/<_id>', methods=['GET', 'POST'])
+#ALTERAR EMPRESA
+@app.route('/alterar_empresa/<_id>', methods=['GET', 'POST'])
 def alterar_empresa(_id):
     aux = mongo.db.empresas.find_one(({'_id': ObjectId(_id)}))
 
