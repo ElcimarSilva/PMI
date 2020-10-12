@@ -26,7 +26,7 @@ def painel():
 #CADASTRO USUARIO
 @app.route ("/usuario", methods=['GET', 'POST'])
 def usuario():
-    field=form(request.form)
+    field=user(request.form)
 
     if request.method == 'POST' and field.validate():
         nome=request.form['nome']
@@ -39,6 +39,7 @@ def usuario():
         flash('Cadastro efetuado!')
         return redirect ('/')
     return render_template ('usuario.html', field=field)
+    
 ##################################################################################
 
 #CADASTRO ATIVIDADES
