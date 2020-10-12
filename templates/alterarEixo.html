@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% from "macro.html" import render_field %}
+<div class="container">
+    <form method='POST' class="text-center">
+
+        <div class="form-group">
+            <input type="hidden" name='csrf_token' value='{{csrf_token()}}'>
+            <div>{{ render_field(field.eixo, value=itens['eixo'], class="form-control")}}</div>
+            <div>{{ render_field(field.descricao,  value=itens['descricao'], class="form-control")}} </div>
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="Enviar">
+
+    </form>
+</div>
+{% endblock %}

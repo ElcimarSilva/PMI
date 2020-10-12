@@ -39,6 +39,7 @@ def usuario():
         flash('Cadastro efetuado!')
         return redirect ('/')
     return render_template ('usuario.html', field=field)
+##################################################################################
 
 #CADASTRO ATIVIDADES
 @app.route ("/cadAtividade", methods=['GET', 'POST'])
@@ -54,8 +55,39 @@ def cadAtividade():
 
         mongo.db.atividades.insert_one(json)
         flash('Cadastro efetuado!')
-        return redirect ('/painel')
+        return redirect ('/pagAtividades')
     return render_template ('cadAtividade.html', field=field)
+
+#LISTAR ATIVIDADES
+@app.route ("/pagAtividades", methods=['GET'])
+def pagAtividades():
+    itens = mongo.db.atividades.find()
+    print (itens)
+    return render_template ('pagAtividades.html', itens=itens)
+
+#DELETAR ATIVIDADES
+@app.route('/deletar_atividade/<_id>', methods=['GET','DELETE'])
+def deleta_atividade(_id):
+    mongo.db.atividades.delete_one({'_id': ObjectId(_id)})
+
+    return redirect (url_for('pagAtividades'))
+
+#ALTERAR ATIVIDADES
+@app.route('/alterar_atividade/<_id>', methods=['GET', 'POST'])
+def alterar_atividade(_id):
+    aux = mongo.db.atividades.find_one(({'_id': ObjectId(_id)}))
+
+    field = atvdd(request.form)
+    if request.method == 'POST' and field.validate():
+        atividade=request.form['atividade']
+        descricao=request.form['descricao']
+        json={'atividade':atividade, 'descricao':descricao}
+
+        mongo.db.atividades.delete_one({'_id': ObjectId(_id)})
+        mongo.db.atividades.insert_one(json)
+        
+        return redirect (url_for('pagAtividades'))
+    return render_template('alterarAtividade.html', itens= aux, field=field)
 
 ####################################################################################
 #CADASTRO FASES
@@ -135,6 +167,23 @@ def deleta_eixo(_id):
     mongo.db.eixos.delete_one({'_id': ObjectId(_id)})
 
     return redirect (url_for('pagEixos'))
+
+#ALTERAR EIXOS
+@app.route('/alterar_eixo/<_id>', methods=['GET', 'POST'])
+def alterar_eixo(_id):
+    aux = mongo.db.eixos.find_one(({'_id': ObjectId(_id)}))
+
+    field = classeeixo(request.form)
+    if request.method == 'POST' and field.validate():
+        eixo=request.form['eixo']
+        descricao=request.form['descricao']
+        json={'eixo':eixo, 'descricao':descricao}
+
+        mongo.db.eixos.delete_one({'_id': ObjectId(_id)})
+        mongo.db.eixos.insert_one(json)
+        
+        return redirect (url_for('pagEixos'))
+    return render_template('alterarEixo.html', itens= aux, field=field)
 
 ####################################################################################
 #CADASTRO EMPRESAS
