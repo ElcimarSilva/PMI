@@ -23,6 +23,7 @@ def painel():
     #teste = 'texto da variavel na rota painel do app.py'
     return render_template('painel.html')#, teste=teste
 ##################################################################################
+
 #CADASTRO USUARIO
 @app.route ("/usuario", methods=['GET', 'POST'])
 def usuario():
@@ -39,7 +40,7 @@ def usuario():
         flash('Cadastro efetuado!')
         return redirect ('/')
     return render_template ('usuario.html', field=field)
-    
+
 ##################################################################################
 
 #CADASTRO ATIVIDADES
