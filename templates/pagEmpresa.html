@@ -25,6 +25,7 @@
                     <tr>
                         <th scope="col">Startups</th>
                         <th scope="col">Descrição</th>
+                        <th scope="col">Porcentagem do Avanço</th> <!-- valorF-->
                         <th scope="col">Opções</th>
                     </tr>
 
@@ -37,6 +38,7 @@
 
                         <td>{{ item['empresa'] }}</td>
                         <td>{{ item['descricao'] }}</td>
+                        <td>{{ item['valorF'] }}</td>
                         <td >
                             <a href="/deletar_empresa/{{ item['_id']}}" class="btn btn-primary btn-sm">
                                 <span class="fa fa-trash" aria-hidden="true"></span>

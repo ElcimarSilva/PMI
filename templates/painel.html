@@ -84,27 +84,10 @@
         <div class="row">
             {% for item in itens%}
             <div class="col">
-                <div class="chart" data-percent="73">{{ item['empresa'] }}</div>
-                <!-- Fazer a porcentagem vir do banco-->
+                <div class="chart" data-percent="{{ item['valorF'] }}">{{ item['empresa'] }}</div>
             </div>
             {%endfor%}
-            <div class="col">
-                <div class="chart" data-percent="73">73%</div>
-            </div>
-            <div class="col">
-                <div class="chart" data-percent="73">73%</div>
-            </div>
-            <div class="col">
-                <div class="chart" data-percent="73">73%</div>
-            </div>
-            <div class="col">
-                <div class="chart" data-percent="73">73%</div>
-            </div>
-            <div class="col">
-                <div class="chart" data-percent="73">73%</div>
-            
         </div>
-
     </div>
 
     <!--

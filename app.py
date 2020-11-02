@@ -197,7 +197,8 @@ def cadEmpresa():
     if request.method == 'POST' and field.validate():
         empresa=request.form['empresa']
         descricao=request.form['descricao']
-        json={'empresa':empresa, 'descricao':descricao}
+        valorF=request.form['valorF']
+        json={'empresa':empresa, 'descricao':descricao, 'valorF':valorF}
         
 
         mongo.db.empresas.insert_one(json)
@@ -228,7 +229,8 @@ def alterar_empresa(_id):
     if request.method == 'POST' and field.validate():
         empresa=request.form['empresa']
         descricao=request.form['descricao']
-        json={'empresa':empresa, 'descricao':descricao}
+        valorF=request.form['valorF']
+        json={'empresa':empresa, 'descricao':descricao, 'valorF':valorF}
 
         mongo.db.empresas.delete_one({'_id': ObjectId(_id)})
         mongo.db.empresas.insert_one(json)
