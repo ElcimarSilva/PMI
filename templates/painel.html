@@ -5,14 +5,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/stylepainel.css') }}"> -->
+
     <title>PMI Elcimar</title>
 </head>
 
 <body>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/stylepainel.css') }}">
     <!-- MENU-->
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/">PMI Elcimar</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -57,6 +59,55 @@
         </div>
     </nav>
     <!-- MENU-->
+
+    </div>
+    <style>
+        .container .row .col .chart {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 30px;
+            line-height: 180px;
+            color: rgb(0, 0, 0);
+
+        }
+
+        .container .row .col canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+    <div class="container">
+        <div class="row">
+            {% for item in itens%}
+            <div class="col">
+                <div class="chart" data-percent="73">{{ item['empresa'] }}</div>
+                <!-- Fazer a porcentagem vir do banco-->
+            </div>
+            {%endfor%}
+            <div class="col">
+                <div class="chart" data-percent="73">73%</div>
+            </div>
+            <div class="col">
+                <div class="chart" data-percent="73">73%</div>
+            </div>
+            <div class="col">
+                <div class="chart" data-percent="73">73%</div>
+            </div>
+            <div class="col">
+                <div class="chart" data-percent="73">73%</div>
+            </div>
+            <div class="col">
+                <div class="chart" data-percent="73">73%</div>
+            
+        </div>
+
+    </div>
+
+    <!--
     <div class="container">
 
         <div class="box">
@@ -80,7 +131,7 @@
         </div>
 
     </div>
-
+-->
     <script src="https://code.jquery.com/jquery-3.5.1.js"
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script src="../static/js/jquery.easypiechart.js"></script>
@@ -89,7 +140,7 @@
         $(function () {
             $('.chart').easyPieChart({
                 size: 180,
-                barColor: '#17d3e6',
+                barColor: '#007bff',
                 scaleColor: false,
                 lineWidth: 15,
                 trackColor: '#373737',

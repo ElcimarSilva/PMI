@@ -21,7 +21,8 @@ def base():
 @app.route ("/painel", methods=['GET'])
 def painel():
     #teste = 'texto da variavel na rota painel do app.py'
-    return render_template('painel.html')#, teste=teste
+    itens = mongo.db.empresas.find()
+    return render_template('painel.html',itens=itens)#, teste=teste
 ##################################################################################
 
 #CADASTRO USUARIO

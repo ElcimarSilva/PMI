@@ -10,7 +10,7 @@ class atvdd(Form):
     descricao=StringField('Descrição', [validators.length(min=2, max=50, message='Descrição invalida')])
 
 class startup(Form):
-    empresa=StringField('Empresa', [validators.length(min=2, max=2, message='Empresa invalida min 2 max 12')])
+    empresa=StringField('Empresa', [validators.length(min=2, max=15, message='Empresa invalida min 2 max 12')])
     descricao=StringField('Descrição', [validators.length(min=2, max=30, message='Descrição invalida')])
 
 class classefase(Form):
