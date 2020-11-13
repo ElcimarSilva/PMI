@@ -1,9 +1,13 @@
-from wtforms import Form, StringField, validators
+from wtforms import Form, StringField, validators, PasswordField
 from wtforms.fields.html5 import EmailField
 
 class user(Form):
     nome=StringField('Nome', [validators.length(min=2, max=10, message='Nome invalido min 2 max 10')])
     email=EmailField('Email', [validators.length(min=2, max=20, message='Email invalido')])
+
+class login(Form):
+    usuario = StringField('Usuário', [validators.length(min=3, max=15, message='Login inválido!')])
+    senha = PasswordField('Senha', [validators.length(min=5, max=20, message='Senha inválida!')])
 
 class atvdd(Form):
     atividade=StringField('Atividade', [validators.length(min=2, max=20, message='Atividade invalida min 2 max 10')])

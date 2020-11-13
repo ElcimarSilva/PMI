@@ -5,6 +5,7 @@ from bson import json_util
 from bson.objectid import ObjectId
 from forms import *
 from flask_wtf import CSRFProtect
+from functools import wraps
 
 app = Flask (__name__)
 app.config['MONGO_URI']='mongodb://localhost/pythonmongodb' #Base de dados
@@ -24,6 +25,43 @@ def painel():
     itens = mongo.db.empresas.find()
     return render_template('painel.html',itens=itens)#, teste=teste
 ##################################################################################
+#Controle de sessão do usuario
+def login_required(run):
+	@wraps(run)
+	def wrap(*args, **kwargs):
+		if 'usuario' in session:
+			return run(*args, **kwargs)
+		else:
+			flash('Por favor! Efetue o login primeiro!')
+			return redirect(url_for('login'))
+	return wrap
+
+@app.route ("/login", methods=['GET', 'POST'])
+def login():
+    field=login(request.form)
+
+    if request.method == 'POST' and field.validate():
+        usuario = request.form['usuario']
+        senha = request.form['senha']
+        json = {'username': usuario, 'password': senha}
+        validacao = mongo.db.users.find_one(json)
+
+        if validacao is None:
+            flash ("Usuario ou senha invalido!")
+            return redirect (url_for('login'))
+        else:
+            flash('Bem vindo!')
+            return redirect(url_for('base'))
+    
+    return render_template ('login.html', field=field)
+
+@app.route('/logout')
+@login_required
+def logout():  #encerra sessão do usuário
+    if 'usuario' in session:
+        session.pop('usuario')
+    return redirect(url_for('login'))
+    
 
 #CADASTRO USUARIO
 @app.route ("/usuario", methods=['GET', 'POST'])
@@ -49,13 +87,12 @@ def usuario():
 def cadAtividade():
 
     field=atvdd(request.form) 
-
     if request.method == 'POST' and field.validate():
         atividade=request.form['atividade']
         descricao=request.form['descricao']
-        json={'atividade':atividade, 'descricao':descricao}
         
-
+        json={'atividade':atividade, 'descricao':descricao}
+    
         mongo.db.atividades.insert_one(json)
         flash('Cadastro efetuado!')
         return redirect ('/pagAtividades')
@@ -193,18 +230,24 @@ def alterar_eixo(_id):
 @app.route ("/cadEmpresa", methods=['GET', 'POST'])
 def cadEmpresa():
     field=startup(request.form) 
+    itensfase = mongo.db.fases.find()
+    itenseixo = mongo.db.eixos.find()
+    itensatividade = mongo.db.atividades.find()
 
     if request.method == 'POST' and field.validate():
         empresa=request.form['empresa']
         descricao=request.form['descricao']
         valorF=request.form['valorF']
-        json={'empresa':empresa, 'descricao':descricao, 'valorF':valorF}
+        fase=request.form['fase']
+        eixo=request.form['eixo']
+        atividade=request.form['atividade']
+        json={'empresa':empresa, 'descricao':descricao, 'valorF':valorF, 'fase':fase, 'eixo':eixo, 'atividade':atividade}
         
 
         mongo.db.empresas.insert_one(json)
         flash('Cadastro efetuado!')
         return redirect ('/pagEmpresa')
-    return render_template ('cadEmpresa.html', field=field)
+    return render_template ('cadEmpresa.html', field=field, itensfase=itensfase, itenseixo=itenseixo, itensatividade=itensatividade)
 
 #LISTAR EMPRESAS                   
 @app.route ("/pagEmpresa", methods=['GET'])
@@ -224,19 +267,25 @@ def deleta_empresa(_id):
 @app.route('/alterar_empresa/<_id>', methods=['GET', 'POST'])
 def alterar_empresa(_id):
     aux = mongo.db.empresas.find_one(({'_id': ObjectId(_id)}))
-
+    itensfase = mongo.db.fases.find()
+    itenseixo = mongo.db.eixos.find()
+    itensatividade = mongo.db.atividades.find()
+    
     field = startup(request.form)
     if request.method == 'POST' and field.validate():
         empresa=request.form['empresa']
         descricao=request.form['descricao']
         valorF=request.form['valorF']
-        json={'empresa':empresa, 'descricao':descricao, 'valorF':valorF}
+        fase=request.form['fase']
+        eixo=request.form['eixo']
+        atividade=request.form['atividade']
+        json={'empresa':empresa, 'descricao':descricao, 'valorF':valorF, 'fase':fase, 'eixo':eixo, 'atividade':atividade}
 
         mongo.db.empresas.delete_one({'_id': ObjectId(_id)})
         mongo.db.empresas.insert_one(json)
         
         return redirect (url_for('pagEmpresa'))
-    return render_template('alterarEmpresa.html', itens= aux, field=field)
+    return render_template('alterarEmpresa.html', itens= aux, field=field, itensfase=itensfase, itenseixo=itenseixo, itensatividade=itensatividade)
 
 ####################################################################################
 

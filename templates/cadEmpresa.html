@@ -5,12 +5,39 @@
 <div class="container">
 
     <form method='POST' class="text-center">
-
-        <input type="hidden" name='csrf_token' value='{{csrf_token()}}'>
-        <div>{{ render_field(field.empresa, class="form-control")}}</div>
-        <div>{{ render_field(field.descricao, class="form-control")}}</div>
-        <div>{{ render_field(field.valorF, class="form-control")}}</div>
-
+        <div class="form-group">
+            <input type="hidden" name='csrf_token' value='{{csrf_token()}}'>
+            <div>{{ render_field(field.empresa, class="form-control")}}</div>
+            <div>{{ render_field(field.descricao, class="form-control")}}</div>
+            <div>{{ render_field(field.valorF, class="form-control")}}</div>
+        </div>
+        <div class="form-group">
+            <select class="form-control" name="fase">
+                {% for item in itensfase%}
+                <option>
+                    {{ item['fase'] }}
+                </option>
+                {%endfor%}
+            </select>
+        </div>
+        <div class="form-group">
+            <select class="form-control" name="eixo">
+                {% for item in itenseixo%}
+                <option>
+                    {{ item['eixo'] }}
+                </option>
+                {%endfor%}
+            </select>
+        </div>
+        <div class="form-group">
+            <select class="form-control" name="atividade">
+                {% for item in itensatividade %}
+                <option>
+                    {{ item['atividade'] }}
+                </option>
+                {%endfor%}
+            </select>
+        </div>
         <input class="btn btn-primary" type="submit" value="Enviar">
 
     </form>
