@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Atividade</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+       
+        <tbody>
+            {% for atividade in atividades %}
+          <tr>
+            <td>{{atividade['atividade']}}</td>
+            <td> <a href="/alterar_status/{{atividade['_id']}}" class="btn btn-primary btn-sm">Botão</td>
+          </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    
+</div>
+{% endblock %}

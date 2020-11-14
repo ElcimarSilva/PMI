@@ -25,6 +25,21 @@ def painel():
     itens = mongo.db.empresas.find()
     return render_template('painel.html',itens=itens)#, teste=teste
 ##################################################################################
+
+@app.route("/pagdastartup/<_id>", methods=['GET'])
+def pagdastartup(_id):
+    itens = mongo.db.empresas.find_one(ObjectId(_id))
+    fases = mongo.db.fases.find()
+    eixos = mongo.db.eixos.find()
+    return render_template ('PagDaStartup.html', itens=itens, fases=fases, eixos=eixos)
+
+@app.route("/atividades_startup/<_id>/<fase>/<eixo>", methods=['GET'])
+def atividades_startup(_id, fase=None, eixo=None):
+    atividades = mongo.db.atividades.find()
+
+    return render_template ('AtividadesStartup.html', atividades=atividades)
+
+##################################################################################
 #Controle de sessão do usuario
 def login_required(run):
 	@wraps(run)
