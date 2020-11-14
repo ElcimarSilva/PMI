@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="jumbotron">
-    <h1 class="display-4">Pagina Empresas</h1>
+    <h1 class="display-4">Pagina Empresa{{pagEmpresa}}</h1>
     <!--<p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
     <hr class="my-4"> -->
 </div>
@@ -10,59 +10,95 @@
 <style type="text/css">
     #bordaredonda {
         border-radius: 10px;
+        border-style: hidden;
     }
 </style>
+
+
 <tbody>
 
-    <div class="container">
-        <div style='padding-bottom: 1cm; padding-top: 1cm;'>
-            <a class="btn btn-primary btn-sm" href="cadEmpresa" role="button">Cadastrar Empresa</a>
-        </div>
-        <table class="table table-striped table-dark" id="bordaredonda">
+<div class="container">
+    <div style='padding-bottom: 1cm; padding-top: 0cm;'>
+        <a class="btn btn-primary btn-sm" href="cadEmpresa" role="button">Cadastrar Empresa</a>
+    </div>
+    <table class="table table-striped table-dark" id="bordaredonda">
 
-            <tbody>
-                <thead>
-                    <tr>
-                        <th scope="col">Startups</th>
-                        <th scope="col">Descrição</th>
-                        <th scope="col">Porcentagem do Avanço</th> <!-- valorF-->
-                        <th scope="col">Opções</th>
-                    </tr>
+        <tbody class="container">
+            <thead>
+                <tr>
+                    <th scope="col">Startups</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Porcentagem do Avanço</th> <!-- valorF-->
+                    <th scope="col">Opções</th>
+                </tr>
 
-                </thead>
+            </thead>
 
-                {% for item in itens%}
-                <table class="table table-striped table-dark" id="bordaredonda">
+            {% for item in itens%}
 
-                    <tr>
-                        <td>{{ item['empresa'] }}</td>
-                        <td>{{ item['descricao'] }}</td>
-                        <td>{{ item['valorF'] }}</td>
-                        <td>
-                            <a href="/deletar_empresa/{{ item['_id']}}" class="btn btn-primary btn-sm">
-                                <span class="fa fa-trash" aria-hidden="true"></span>
-                                <span><strong>Deletar</strong></span>
-                            </a>
+            <table class="table table-striped table-dark" id="bordaredonda">
 
+                <tr>
+                    <td>{{ item['empresa'] }}</td>
+                    <td>{{ item['descricao'] }}</td>
+                    <td>{{ item['valorF'] }}</td>
+                    <td>
+                        <a href="/deletar_empresa/{{ item['_id']}}" class="btn btn-primary btn-sm">
+                            <span class="fa fa-trash" aria-hidden="true"></span>
+                            <span><strong>Deletar</strong></span>
+                        </a>
+
+                        <a href="/alterar_empresa/{{ item['_id']}}" class="btn btn-primary btn-sm">
+                            <span class="fa fa-trash" aria-hidden="true"></span>
+                            <span><strong>Alterar</strong></span>
+                        </a>
+
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            Modal
+                        </button>
+
+                    </td>
+
+                </tr>
+                
+
+            </table>
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
                             <a href="/alterar_empresa/{{ item['_id']}}" class="btn btn-primary btn-sm">
                                 <span class="fa fa-trash" aria-hidden="true"></span>
                                 <span><strong>Alterar</strong></span>
                             </a>
-                        </td>
-
-                    </tr>
-
-                </table>
-            </tbody>
-        </table>
-
-    </container>
-                {%endfor%}
-
-
+                            <a href="/deletar_empresa/{{ item['_id']}}" class="btn btn-primary btn-sm">
+                                <span class="fa fa-trash" aria-hidden="true"></span>
+                                <span><strong>Deletar</strong></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
 </tbody>
-
-
-
 
 {% endblock %}

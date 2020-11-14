@@ -1,21 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div>
-    <h1>Texto da pagina pagFases.html {{pagFases}}</h1>
+
+<div class="jumbotron">
+    <h1 class="display-4">Pagina Fases{{pagFases}}</h1>
+    <!--<p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+    <hr class="my-4"> -->
 </div>
 
 <style type="text/css">
-    #bordaredonda{
+    #bordaredonda {
         border-radius: 10px;
-        }
-    
-    </style>
+        border-style: hidden;
+    }
+</style>
 
 <tbody>
 
     <div class="container">
-        <div style='padding-bottom: 1cm; padding-top: 1cm;'>
+        <div style='padding-bottom: 1cm; padding-top: 0cm;'>
             <a class="btn btn-primary btn-sm" href="cadFase" role="button">Cadastrar Novas Fases</a>
         </div>
         <table class="table table-striped table-dark" id="bordaredonda">
@@ -29,7 +32,7 @@
                     </tr>
 
                 </thead>
-                
+
                 {% for item in itens%}
                 <table class="table table-striped table-dark" id="bordaredonda">
 
@@ -37,7 +40,7 @@
 
                         <td>{{ item['fase'] }}</td>
                         <td>{{ item['descricao'] }}</td>
-                        <td >
+                        <td>
                             <a href="/deletar_fase/{{ item['_id']}}" class="btn btn-primary btn-sm">
                                 <span class="fa fa-trash" aria-hidden="true"></span>
                                 <span><strong>Deletar</strong></span>
@@ -55,8 +58,8 @@
             </tbody>
         </table>
 
-    </container>
-    {%endfor%}
+        </container>
+        {%endfor%}
 
 
 </tbody>
