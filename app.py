@@ -42,6 +42,7 @@ def startup_atividades(_id):  #, fase=None, eixo=None
     return render_template ('StartupAtividades.html', atividades=atividades)
 
 ##################################################################################
+
 #EM CONSTRUÇÃO LOGIN E LOGOUT DOS USUARIOS
 #Controle de sessão do usuario
 def login_required(run):
@@ -99,7 +100,6 @@ def usuario():
     return render_template ('cadUsuario.html', field=field)
 
 ##################################################################################
-
 #CADASTRO ATIVIDADES
 @app.route ("/cadAtividade", methods=['GET', 'POST'])
 def cadAtividade():
@@ -136,13 +136,12 @@ def pagAtividades():
 #DELETAR ATIVIDADES (collection)
 @app.route('/deletar_atividade/<_id>', methods=['GET','DELETE'])
 def deleta_atividade(_id):
-    #deleta_atividades(_id)
     mongo.db.atividades.delete_one({'_id': ObjectId(_id)})
     return redirect (url_for('pagAtividades'))
 
 #deleta dentro dos arrays AINDA COM ERRO
-@app.route('/deletar_atividades/<_id>', methods=['GET','DELETE'])
-def deleta_atividades(_id):
+@app.route('/deletar_atividade_array/<_id>', methods=['GET','DELETE'])
+def deleta_atividade_array(_id):
     empresas = mongo.db.empresas.find()
     
     for empresa in empresas:
