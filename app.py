@@ -8,11 +8,17 @@ from flask_wtf import CSRFProtect
 from functools import wraps
 
 app = Flask (__name__)
-app.config['MONGO_URI']='mongodb://localhost/pythonmongodb' #Base de dados
+app.config['MONGO_URI']='mongodb://localhost/bdpmi' #Base de dados
 mongo = PyMongo(app)
 app.secret_key='chavesecreta'
 csrf=CSRFProtect(app) #Função do Flask para proteger Form
 ##################################################################################
+#ROTA HOME /
+@app.route ("/", methods =['GET'])
+def inicio():
+    itens = mongo.db.empresas.find()
+    return render_template('/painel.html', itens=itens)
+
 #PAINEL
 @app.route ("/painel", methods=['GET'])
 def painel():
@@ -21,6 +27,7 @@ def painel():
     return render_template('painel.html',itens=itens)#, teste=teste
 ##################################################################################
 
+#EM CONSTRUÇÃO /SERA AS SESSÕES DE APENAS EMPRESAS EM ESPECIFICO
 @app.route("/pagdastartup/<_id>", methods=['GET'])
 def pagdastartup(_id):
     itens = mongo.db.empresas.find_one(ObjectId(_id))
@@ -35,6 +42,7 @@ def atividades_startup(_id, fase=None, eixo=None):
     return render_template ('AtividadesStartup.html', atividades=atividades)
 
 ##################################################################################
+#EM CONSTRUÇÃO LOGIN E LOGOUT DOS USUARIOS
 #Controle de sessão do usuario
 def login_required(run):
 	@wraps(run)
@@ -101,14 +109,15 @@ def cadAtividade():
         atividade=request.form['atividade']
         descricao=request.form['descricao']
         
-        json={'atividade':atividade, 'descricao':descricao, 'status':False}
+        json={'atividade':atividade, 'descricao':descricao, 'finalizado':False}
         
         mongo.db.atividades.insert_one(json)
-        cad_atividades(mongo.db.atividades.find_one({'atividade':atividade}))
+        #cad_atividades(mongo.db.atividades.find_one({'atividade':atividade})) # PUXA O MEDOTODO cad_atividades QUE CADASTRA DENTRO DO ARRAY
         flash('Cadastro efetuado!')
         return redirect ('/pagAtividades')
     return render_template ('cadAtividade.html', field=field)
 
+#METODO PARA CADASTRAR ATIVIDADES DENTRO DO ARRAY
 def cad_atividades(atividade):
     empresas = mongo.db.empresas.find()
     for empresa in empresas:
@@ -129,9 +138,9 @@ def pagAtividades():
 def deleta_atividade(_id):
     #deleta_atividades(_id)
     mongo.db.atividades.delete_one({'_id': ObjectId(_id)})
-
     return redirect (url_for('pagAtividades'))
-#deleta dentro dos arrays
+
+#deleta dentro dos arrays AINDA COM ERRO
 @app.route('/deletar_atividades/<_id>', methods=['GET','DELETE'])
 def deleta_atividades(_id):
     empresas = mongo.db.empresas.find()
@@ -141,14 +150,16 @@ def deleta_atividades(_id):
             for eixo in fase['eixos']:
                 for at in eixo['atividades']:
                     if ObjectId(at['_id']) == ObjectId(_id):
-                    
+                        
+                        #COM ERROS
                         #mongo.db.atividades.delete_one({'_id': ObjectId(_id)})
                         #del at['_id']
                         mongo.db.empresas.update({'_id' :empresa['_id']}, empresa)
                         #mongo.db.empresa.update({}, {'$pull': {'fases':{'$elemMatch': {'eixos': {'$elemMatch':{'atividades': {'_id': ObjectId(_id)}}}}} }})
     return redirect (url_for('pagAtividades'))
- 
-def set_atividades():
+
+#FUNCAO PARA CRIAR ATIVIDADES AUTOMATICAMENTE DE ACORDO COM ID (SOMETE PARA TESTES)
+def criar_atividades():
     empresas = mongo.db.empresas.find_one({'_id': ObjectId('5fb46b17c81485997ba8e802')})
     
     for fase in empresas['fases']:
@@ -165,7 +176,7 @@ def alterar_atividade(_id):
     if request.method == 'POST' and field.validate():
         atividade=request.form['atividade']
         descricao=request.form['descricao']
-        json={'atividade':atividade, 'descricao':descricao}
+        json={'atividade':atividade, 'descricao':descricao, 'finalizado':False}
 
         mongo.db.atividades.delete_one({'_id': ObjectId(_id)})
         mongo.db.atividades.insert_one(json)
@@ -182,7 +193,7 @@ def cadFase():
     if request.method == 'POST' and field.validate():
         fase=request.form['fase']
         descricao=request.form['descricao']
-        json={'fase':fase, 'descricao':descricao, 'status':False, 'eixos':[]}
+        json={'fase':fase, 'descricao':descricao, 'finalizado':False}  # , 'eixos':[] COLOCAR DENTRO DOS COLCHETES PARA CRIAR UM ARRAY DE EIXOS
         
 
         mongo.db.fases.insert_one(json)
@@ -194,7 +205,7 @@ def cadFase():
 @app.route ("/pagFases", methods=['GET'])
 def pagFases():
     itens = mongo.db.fases.find()
-    print (itens)
+    
     return render_template ('pagFases.html', itens=itens)
 
 #DELETAR FASES
@@ -213,7 +224,7 @@ def alterar_fase(_id):
     if request.method == 'POST' and field.validate():
         fase=request.form['fase']
         descricao=request.form['descricao']
-        json={'fase':fase, 'descricao':descricao}
+        json={'fase':fase, 'descricao':descricao, 'finalizado':False}
 
         mongo.db.fases.delete_one({'_id': ObjectId(_id)})
         mongo.db.fases.insert_one(json)
@@ -230,7 +241,7 @@ def cadEixo():
     if request.method == 'POST' and field.validate():
         eixo=request.form['eixo']
         descricao=request.form['descricao']
-        json={'eixo':eixo, 'descricao':descricao, 'status':False, 'atividades': []}
+        json={'eixo':eixo, 'descricao':descricao, 'finalizado':False} #, 'atividades': []    COLOCAR DENTRO DOS COLCHETES PARA CRIAR UM ARRAY DE ATIVIDADES
         
 
         mongo.db.eixos.insert_one(json)
@@ -242,7 +253,7 @@ def cadEixo():
 @app.route ("/pagEixos", methods=['GET'])
 def pagEixos():
     itens = mongo.db.eixos.find()
-    print (itens)
+    
     return render_template ('pagEixos.html', itens=itens)
 
 #DELETAR EIXOS
@@ -261,7 +272,7 @@ def alterar_eixo(_id):
     if request.method == 'POST' and field.validate():
         eixo=request.form['eixo']
         descricao=request.form['descricao']
-        json={'eixo':eixo, 'descricao':descricao}
+        json={'eixo':eixo, 'descricao':descricao, 'finalizado':False}
 
         mongo.db.eixos.delete_one({'_id': ObjectId(_id)})
         mongo.db.eixos.insert_one(json)
@@ -284,15 +295,15 @@ def cadEmpresa():
         valorF=request.form['valorF']
         
                     
-        json={'empresa':empresa, 'descricao':descricao, 'valorF':valorF, 'fases':[], 'finalizado':False}
-        json=setatividades(seteixos(setfases(json)))
+        json={'empresa':empresa, 'descricao':descricao, 'valorF':valorF, 'finalizado':False} # 'fases':[],  COLOCAR NOS COLCHETES PARA CRIAR ARRAY DE FASES
+        #json=setatividades(seteixos(setfases(json))) #REALIZA O CADASTRO DENTRO DOS ARRAYS
         
         mongo.db.empresas.insert_one(json)
         flash('Cadastro efetuado!')
         return redirect ('/pagEmpresa')
     return render_template ('cadEmpresa.html', field=field)
 
-
+#METODOS PARA CADASTRAR A EMPRESA DENTRO DE ARRAYS
 def setfases(empresa:dict):
     itensfase = mongo.db.fases.find()
     for fase in itensfase:
@@ -319,14 +330,12 @@ def setatividades(empresa:dict):
 @app.route ("/pagEmpresa", methods=['GET'])
 def pagEmpresa():
     itens = mongo.db.empresas.find()
-    print (itens)
     return render_template ('pagEmpresa.html', itens=itens)
 
 #DELETAR EMPRESA
 @app.route('/deletar_empresa/<_id>', methods=['GET','DELETE'])
 def deleta_empresa(_id):
     mongo.db.empresas.delete_one({'_id': ObjectId(_id)})
-
     return redirect (url_for('pagEmpresa'))
 
 #ALTERAR EMPRESA
@@ -335,13 +344,12 @@ def alterar_empresa(_id):
     aux = mongo.db.empresas.find_one(({'_id': ObjectId(_id)}))
     
     field = startup(request.form)
-    print (request.method)
+    
     if request.method == 'POST' and field.validate():
-        print ('============================================')
         empresa=request.form['empresa']
         descricao=request.form['descricao']
         valorF=request.form['valorF']
-        json={'empresa': empresa, 'descricao' : descricao, 'valorF': valorF, 'fases':aux['fases']}
+        json={'empresa': empresa, 'descricao' : descricao, 'valorF': valorF, 'finalizado':False} # , 'fases':aux['fases']   COLOCAR DENTRO DOS COLCHETES PARA COLOCAR ARRAY DE FASES
         mongo.db.empresas.update({'_id':ObjectId(_id)}, json)
 
         #mongo.db.empresas.delete_one({'_id': ObjectId(_id)})

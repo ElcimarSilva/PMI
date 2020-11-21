@@ -23,5 +23,5 @@ class classefase(Form):
     descricao=StringField('Descrição', [validators.length(min=2, max=30, message='Descrição invalida')])
 
 class classeeixo(Form):
-    eixo=StringField('Eixo', [validators.length(min=2, max=10, message='Eixo invalido min 2 max 10')])
-    descricao=StringField('Descrição', [validators.length(min=2, max=30, message='Descrição invalida')])
+    eixo=StringField('Eixo', [validators.length(min=2, max=15, message='Eixo invalido min 2 max 10')])
+    descricao=StringField('Descrição', [validators.length(min=2, max=60, message='Descrição invalida')])
