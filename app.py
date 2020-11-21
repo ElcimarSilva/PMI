@@ -13,11 +13,6 @@ mongo = PyMongo(app)
 app.secret_key='chavesecreta'
 csrf=CSRFProtect(app) #Função do Flask para proteger Form
 ##################################################################################
-#Rota home de teste
-@app.route ("/", methods=['GET'])
-def base():
-    
-    return render_template('base.html')
 #PAINEL
 @app.route ("/painel", methods=['GET'])
 def painel():
@@ -107,26 +102,60 @@ def cadAtividade():
         descricao=request.form['descricao']
         
         json={'atividade':atividade, 'descricao':descricao, 'status':False}
-    
+        
         mongo.db.atividades.insert_one(json)
+        cad_atividades(mongo.db.atividades.find_one({'atividade':atividade}))
         flash('Cadastro efetuado!')
         return redirect ('/pagAtividades')
     return render_template ('cadAtividade.html', field=field)
+
+def cad_atividades(atividade):
+    empresas = mongo.db.empresas.find()
+    for empresa in empresas:
+        for fase in empresa['fases']:
+            for eixo in fase['eixos']:
+                eixo['atividades'].append(atividade)
+        mongo.db.empresas.update({'_id':ObjectId(empresa['_id'])}, empresa)
+
 
 #LISTAR ATIVIDADES
 @app.route ("/pagAtividades", methods=['GET'])
 def pagAtividades():
     itens = mongo.db.atividades.find()
-    print (itens)
     return render_template ('pagAtividades.html', itens=itens)
 
-#DELETAR ATIVIDADES
+#DELETAR ATIVIDADES (collection)
 @app.route('/deletar_atividade/<_id>', methods=['GET','DELETE'])
 def deleta_atividade(_id):
+    #deleta_atividades(_id)
     mongo.db.atividades.delete_one({'_id': ObjectId(_id)})
 
     return redirect (url_for('pagAtividades'))
-
+#deleta dentro dos arrays
+@app.route('/deletar_atividades/<_id>', methods=['GET','DELETE'])
+def deleta_atividades(_id):
+    empresas = mongo.db.empresas.find()
+    
+    for empresa in empresas:
+        for fase in empresa['fases']:
+            for eixo in fase['eixos']:
+                for at in eixo['atividades']:
+                    if ObjectId(at['_id']) == ObjectId(_id):
+                    
+                        #mongo.db.atividades.delete_one({'_id': ObjectId(_id)})
+                        #del at['_id']
+                        mongo.db.empresas.update({'_id' :empresa['_id']}, empresa)
+                        #mongo.db.empresa.update({}, {'$pull': {'fases':{'$elemMatch': {'eixos': {'$elemMatch':{'atividades': {'_id': ObjectId(_id)}}}}} }})
+    return redirect (url_for('pagAtividades'))
+ 
+def set_atividades():
+    empresas = mongo.db.empresas.find_one({'_id': ObjectId('5fb46b17c81485997ba8e802')})
+    
+    for fase in empresas['fases']:
+        for eixo in fase['eixos']:
+            for at in eixo['atividades']: 
+                mongo.db.atividades.insert_one(at)
+    
 #ALTERAR ATIVIDADES
 @app.route('/alterar_atividade/<_id>', methods=['GET', 'POST'])
 def alterar_atividade(_id):
@@ -312,13 +341,11 @@ def alterar_empresa(_id):
         empresa=request.form['empresa']
         descricao=request.form['descricao']
         valorF=request.form['valorF']
-        print(empresa)
-        print(descricao)
-        aux['empresa']=empresa
-        aux['descricao']=descricao
-        aux['valorF']=valorF
-        mongo.db.empresas.delete_one({'_id': ObjectId(_id)})
-        mongo.db.empresas.insert_one(aux)
+        json={'empresa': empresa, 'descricao' : descricao, 'valorF': valorF, 'fases':aux['fases']}
+        mongo.db.empresas.update({'_id':ObjectId(_id)}, json)
+
+        #mongo.db.empresas.delete_one({'_id': ObjectId(_id)})
+        #mongo.db.empresas.insert_one(aux)
 
         return redirect (url_for('pagEmpresa'))
     return render_template('alterarEmpresa.html', itens= aux, field=field)
@@ -326,4 +353,5 @@ def alterar_empresa(_id):
 ####################################################################################
 
 if __name__ == "__main__":
+    #set_atividades()
     app.run(debug=True)

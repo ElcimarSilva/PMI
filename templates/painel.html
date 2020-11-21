@@ -16,7 +16,7 @@
     <!-- MENU-->
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">PMI Elcimar</a>
+        <a class="navbar-brand" href="painel">PMI Elcimar</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -48,6 +48,8 @@
     <!-- MENU-->
 
     </div>
+
+    <!-- CONTEÚDO-->
     <style>
         .container .row .col .chart {
             position: relative;
@@ -70,13 +72,34 @@
     <div class="container">
         <div class="row">
             {% for item in itens%}
-            <div class="col" style="padding-top: 25px;">
-                <div class="chart" data-percent="{{ item['valorF'] }}">{{ item['empresa'] }}</div>
+            <div class="col" style="padding-top: 25px">
+                <div class="chart"  data-percent="{{ item['valorF'] }}">{{ item['empresa'] }}</div>
+                
+                <div class="text-center">
+                <a href="/pagdastartup/{{ item['_id']}}" class="stretched-link">{{ item['valorF'] }}</a>
+                </div>
+                
+                
+                <!--
+                <a href="/pagdastartup/{{ item['_id']}}">
+                    <span class="fa fa-trash" aria-hidden="true"></span>
+                    <span><strong>Startup</strong></span>
+                    -->
+
             </div>
             {%endfor%}
         </div>
     </div>
 
+    <!-- 
+    <div class="text-center">
+        <img src="/static/img/ImgMiditec.png" class="img-fluid" alt="Responsive image">
+        <img src="/static/img/Img2Miditec.png" class="img-fluid" alt="Responsive image">
+    </div>
+    -->
+    <!-- CONTEÚDO-->
+
+    <!--Scripts-->
     <script src="https://code.jquery.com/jquery-3.5.1.js"
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script src="../static/js/jquery.easypiechart.js"></script>
@@ -94,8 +117,8 @@
             });
         });
     </script>
+    <!--Scripts-->
 
-    
 </body>
 
 </html>
