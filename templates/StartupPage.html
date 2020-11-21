@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container ">
+    <div class="container">
+        <div class="alert alert-primary" role="alert">
+            <h4 class="alert-heading">{{ itens['empresa'] }}</h4>
+            <p>{{ itens['descricao'] }}</p>
+            <hr>
+            <p class="mb-0">A porcentagem de avanço até o momento é de <b>{{ itens['valorF'] }}%</b> </p>
+            <br>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="btn-group">
+            {% for fase in fases %}
+            <button name="{{fase['fase']}}" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                {{fase['fase']}}
+            </button>
+
+
+            <div class="dropdown-menu">
+                {% for eixo in eixos %}
+                <a class="dropdown-item" href="/startup_atividades/{{ itens['_id'] }}"
+                    class="btn btn-primary btn-sm">{{eixo['eixo']}}</a>
+                {% endfor %}
+            </div>
+            <!--
+        <div class="dropdown-menu">
+            {% for eixo in eixos %}
+            <a class="dropdown-item" href="/startup_atividades/{{ itens['_id'] }}/{{fase['fase']}}/{{eixo['eixo']}}"
+                class="btn btn-primary btn-sm">{{eixo['eixo']}}</a>
+            {% endfor %}
+        </div>
+        -->
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

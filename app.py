@@ -28,18 +28,18 @@ def painel():
 ##################################################################################
 
 #EM CONSTRUÇÃO /SERA AS SESSÕES DE APENAS EMPRESAS EM ESPECIFICO
-@app.route("/pagdastartup/<_id>", methods=['GET'])
-def pagdastartup(_id):
+@app.route("/startup_page/<_id>", methods=['GET'])
+def startup_page(_id):
     itens = mongo.db.empresas.find_one(ObjectId(_id))
     fases = mongo.db.fases.find()
     eixos = mongo.db.eixos.find()
-    return render_template ('PagDaStartup.html', itens=itens, fases=fases, eixos=eixos)
+    return render_template ('StartupPage.html', itens=itens, fases=fases, eixos=eixos)
 
-@app.route("/atividades_startup/<_id>/<fase>/<eixo>", methods=['GET'])
-def atividades_startup(_id, fase=None, eixo=None):
+@app.route("/startup_atividades/<_id>", methods=['GET']) #/<fase>/<eixo>
+def startup_atividades(_id):  #, fase=None, eixo=None
     atividades = mongo.db.atividades.find()
 
-    return render_template ('AtividadesStartup.html', atividades=atividades)
+    return render_template ('StartupAtividades.html', atividades=atividades)
 
 ##################################################################################
 #EM CONSTRUÇÃO LOGIN E LOGOUT DOS USUARIOS
@@ -96,7 +96,7 @@ def usuario():
         mongo.db.users.insert_one(json)
         flash('Cadastro efetuado!')
         return redirect ('/')
-    return render_template ('usuario.html', field=field)
+    return render_template ('cadUsuario.html', field=field)
 
 ##################################################################################
 
@@ -118,7 +118,7 @@ def cadAtividade():
     return render_template ('cadAtividade.html', field=field)
 
 #METODO PARA CADASTRAR ATIVIDADES DENTRO DO ARRAY
-def cad_atividades(atividade):
+def cad_atividade_array(atividade):
     empresas = mongo.db.empresas.find()
     for empresa in empresas:
         for fase in empresa['fases']:
