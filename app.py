@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Response, redirect, render_template, flash, url_for
+from flask import Flask, request, jsonify, Response, redirect, render_template, flash, url_for, session
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash #biblioteca para criptografar senhas
 from bson import json_util
@@ -12,15 +12,29 @@ app.config['MONGO_URI']='mongodb://localhost/bdpmi' #Base de dados
 mongo = PyMongo(app)
 app.secret_key='chavesecreta'
 csrf=CSRFProtect(app) #Função do Flask para proteger Form
+
+#Controle de sessão do usuario
+def login_required(run):
+	@wraps(run)
+	def wrap(*args, **kwargs):
+		if 'usuario' in session:
+			return run(*args, **kwargs)
+		else:
+			flash('Por favor! Efetue o login primeiro!')
+			return redirect(url_for('login'))
+	return wrap
+
 ##################################################################################
 #ROTA HOME /
 @app.route ("/", methods =['GET'])
+@login_required
 def inicio():
     itens = mongo.db.empresas.find()
     return render_template('/painel.html', itens=itens)
 
 #PAINEL
 @app.route ("/painel", methods=['GET'])
+@login_required
 def painel():
     #teste = 'texto da variavel na rota painel do app.py'
     itens = mongo.db.empresas.find()
@@ -42,35 +56,24 @@ def startup_atividades(_id):  #, fase=None, eixo=None
     return render_template ('StartupAtividades.html', atividades=atividades)
 
 ##################################################################################
-
-#EM CONSTRUÇÃO LOGIN E LOGOUT DOS USUARIOS
-#Controle de sessão do usuario
-def login_required(run):
-	@wraps(run)
-	def wrap(*args, **kwargs):
-		if 'usuario' in session:
-			return run(*args, **kwargs)
-		else:
-			flash('Por favor! Efetue o login primeiro!')
-			return redirect(url_for('login'))
-	return wrap
-
+#LOGIN E LOGOUT DOS USUARIOS
 @app.route ("/login", methods=['GET', 'POST'])
 def login():
-    field=login(request.form)
+    field=Login(request.form)
 
     if request.method == 'POST' and field.validate():
         usuario = request.form['usuario']
         senha = request.form['senha']
-        json = {'username': usuario, 'password': senha}
-        validacao = mongo.db.users.find_one(json)
+        json = {'usuario': usuario, 'senha': senha}
+        validacao = mongo.db.usuarios.find_one(json)
 
         if validacao is None:
             flash ("Usuario ou senha invalido!")
             return redirect (url_for('login'))
         else:
+            session['usuario'] = field.usuario.data 
             flash('Bem vindo!')
-            return redirect(url_for('base'))
+            return redirect(url_for('inicio'))
     
     return render_template ('login.html', field=field)
 

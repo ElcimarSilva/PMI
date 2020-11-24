@@ -5,7 +5,7 @@ class user(Form):
     nome=StringField('Nome', [validators.length(min=2, max=10, message='Nome invalido min 2 max 10')])
     email=EmailField('Email', [validators.length(min=2, max=20, message='Email invalido')])
 
-class login(Form):
+class Login(Form):
     usuario = StringField('Usuário', [validators.length(min=3, max=15, message='Login inválido!')])
     senha = PasswordField('Senha', [validators.length(min=5, max=20, message='Senha inválida!')])
 

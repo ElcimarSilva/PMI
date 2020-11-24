@@ -42,6 +42,10 @@
                     <a class="nav-link" href="pagAtividades">Atividades</a>
                 </li>
 
+                <li class="form-inline">
+                    <button class="btn btn-sm btn-outline-secondary"> <a href="logout">logout</a> </button>
+                </li>
+
             </ul>
         </div>
     </nav>
@@ -73,13 +77,13 @@
         <div class="row">
             {% for item in itens%}
             <div class="col" style="padding-top: 25px">
-                <div class="chart"  data-percent="{{ item['valorF'] }}">{{ item['empresa'] }}</div>
-                
+                <div class="chart" data-percent="{{ item['valorF'] }}">{{ item['empresa'] }}</div>
+
                 <div class="text-center">
-                <a href="/startup_page/{{ item['_id']}}" class="stretched-link">{{ item['valorF'] }}</a>
+                    <a href="/startup_page/{{ item['_id']}}" class="stretched-link">{{ item['valorF'] }}</a>
                 </div>
-                
-                
+
+
                 <!--
                 <a href="/pagdastartup/{{ item['_id']}}">
                     <span class="fa fa-trash" aria-hidden="true"></span>
