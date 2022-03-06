@@ -1,5 +1,5 @@
-from wtforms import Form, StringField, validators, PasswordField
-from wtforms.fields.html5 import EmailField
+from wtforms import Form, StringField, validators, PasswordField, EmailField
+#from wtforms.fields.html5 import EmailField # deu erro ao tentar executar
 
 class user(Form):
     nome=StringField('Nome', [validators.length(min=2, max=10, message='Nome invalido min 2 max 10')])
